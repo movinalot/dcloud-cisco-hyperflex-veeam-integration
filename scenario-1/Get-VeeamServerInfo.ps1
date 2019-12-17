@@ -4,8 +4,8 @@
 
 .DESCRIPTION
   This script is a PowerShell example of connecting and disconnecting from a Veeam Server
-  This Script Adds the Veeam Snapin, connects to the Veeam server, disconnects from the
-  Veeam server and Removes the Veeam Snapin
+  This Script Adds the Veeam Snapin, connects to the Veeam server, Get the Veeam Server,
+  disconnects from the Veeam server and Removes the Veeam Snapin.
 
 .NOTES
   Version:        1.0

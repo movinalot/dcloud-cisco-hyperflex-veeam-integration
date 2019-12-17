@@ -1,16 +1,11 @@
 ﻿<#
 .SYNOPSIS
-  Get-VeeamInventory.ps1 - Backup and Replication Server Connect/Disconnect
+  Get-VeeamInventory.ps1 - Get Inventory from Veeam based on a Path Filter
+
 .DESCRIPTION
-  This script is a PowerShell example of connecting and disconnecting from a Veeam Server
-  This Script Adds the Veeam Snapin, connects to the Veeam server, disconnects from the
-  Veeam server and Removes the Veeam Snapin
-.PARAMETER Select
-    <Brief description of parameter input required. Repeat this attribute if required>
-.INPUTS
-  None
-.OUTPUTS
-  Veeam Server Connection Session Information
+  The Veeam PowerShell Cmdlet Find-VBRViEntity Looks for VMware entities created on a selected host.
+  This script focuses on HostAndClusters.
+
 .NOTES
   Version:        1.0
   Author:         John McDonough - jomcdono, Cisco
@@ -19,16 +14,25 @@
   Scenario: 1
   
 .EXAMPLE
-  Get-VeeamInventory -Select "*hx-b*"
+  Get-VeeamInventory -PathFilter "*HX-DC-B*"
 #>
 [CmdletBinding()]
-param()
+param(
+    [Parameter(Mandatory=$False, HelpMessage="Enter a Path Filter")]
+    [string]$PathFilter
+)
 
 Add-PSSnapin -Name VeeamPSSnapin
 
 Connect-VBRServer
-Get-VBRServer -Type Local
-Get-VBRServerSession
+Find-VBRViEntity -HostsAndClusters |`
+  ?{$_.Path -like $PathFilter} | Sort-Object -Property Name |`
+  Select-Object Name,`
+    Type,`
+    @{Name='UsedSize';Expression={[math]::round($_.UsedSize/1GB,0).ToString()+" GB"}},`
+    @{Name='ProvisionedSize';Expression={[math]::round($_.ProvisionedSize/1GB,0).tostring()+" GB"}},`
+    VmFolderName,`
+    VmHostName | Format-Table -AutoSize
 Disconnect-VBRServer 
 
 Remove-PSSnapin -Name VeeamPSSnapin

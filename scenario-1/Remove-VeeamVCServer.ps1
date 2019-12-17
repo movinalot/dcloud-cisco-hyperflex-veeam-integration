@@ -1,8 +1,10 @@
 ﻿<#
 .SYNOPSIS
   Remove-VeeamVCServer.ps1 - Remove vCenter Server from Veeam
+
 .DESCRIPTION
   This script is a PowerShell example of removing a vCenter server from Veeam
+
 .NOTES
   Version:        1.0
   Author:         John McDonough - jomcdono, Cisco
@@ -11,15 +13,19 @@
   Scenario: 1
   
 .EXAMPLE
-  Remove-VeeamVCServer
+  Remove-VeeamVCServer -vCenterServer vc1.dcloud.cisco.com
 #>
 [CmdletBinding()]
-param()
+param(
+    [Parameter(Mandatory=$true, HelpMessage="Enter a vCenter Server hostname or IP")]
+    [string]$vCenterServer
+
+)
 
 Add-PSSnapin -Name VeeamPSSnapin
 
 Connect-VBRServer
-Remove-VBRServer -Server vc1.dcloud.cisco.com -Confirm
+Remove-VBRServer -Server $vCenterServer
 Disconnect-VBRServer 
 
 Remove-PSSnapin -Name VeeamPSSnapin
