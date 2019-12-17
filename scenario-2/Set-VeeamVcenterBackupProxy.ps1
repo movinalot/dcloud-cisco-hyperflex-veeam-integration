@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-  et-VeeamVcenterBackupProxy.ps1 - Set Veeam Backup Proxy
+  Set-VeeamVcenterBackupProxy.ps1 - Set Veeam Backup Proxy
 
 .DESCRIPTION
   This script is a PowerShell example of Setting a Veeam Backup Proxy
