@@ -13,7 +13,7 @@
   Scenario: 2
   
 .EXAMPLE
-  Set-VMHostFirewall -VMhost "hx-b-*" -Rule -Enable
+  Set-VMHostFirewall.ps1 -vCenterServer vc1.dcloud.cisco.com -vCenterUser dcloud\demouser -vCenterPassword C1sco12345 -VMhost "hx-b-*" -Rule NFSAccess -Enabled
 #>
 [CmdletBinding()]
 param(
