@@ -25,7 +25,7 @@ The Veem PowerShell extension is documented [here](https://helpcenter.veeam.com/
 
 This repository is separated into scenarios to match with the methodology in the dCloud lab guide. To be able to utilize the Veeam PowerShell extension it needs to be enabled in a PowerShell environment.
 
-### Enable the Veeam PowerShell Extension
+## Enable the Veeam PowerShell Extension
 The Veeam PowerShell Extension is installed as part of the Veeam Availability Suite. Use the Add-PSSnapin PowerShell Cmdlet to load the Veeam PowerShell Cmdlets.
 
 1. Launch a PowerShell window as an administrator on the `vb2`desktop
@@ -46,14 +46,14 @@ The Veeam PowerShell Extension is installed as part of the Veeam Availability Su
 
   ![Add-PSSnapin VeeamPSSnapin](images/Add-PSSnapin-VeeamPSSnapin.png)
 
-### Download the Veeam PowerShell Scripts
+## Download the Veeam PowerShell Scripts
 To use the scripts in the dCloud environment, download them from Github.
 
 1. Download the Github repository from [here](https://github.com/movinalot/dcloud-cisco-hyperflex-veeam-integration/archive/master.zip)
 
 2. Unzip the repository
 
-### Set the Script Execution Policy
+## Set the Script Execution Policy
 Downloaded scripts will typically throw an error when running them, set the script execution policy on the dCloud `vb2` desktop
 
 1. Change the PowerShell script execution policy
@@ -64,53 +64,102 @@ Downloaded scripts will typically throw an error when running them, set the scri
 
   ![Set-ExecutionPolicy](images/set-execution-policy.png)
 
-### Scenario 1. Install Veeam Backup & Replication
+## Scenario 1. Install Veeam Backup & Replication
+The purpose of this scenario is to allow Veeam Backup & Replication gain visibility into the virtual infrastructure.
 
-#### Add Managed Servers
+### Add Managed Servers
 - **Steps 6 through 13** - Add a vCenter server to Veeam. This can be accomplished by using the `Add-VeeamVCServer.ps1` script.
 
-```
- Add-VeeamVCServer.ps1 -vCenterServer vc1.dcloud.cisco.com -vCenterUser dcloud\demouser -vCenterPassword C1sco12345
-```
+  ```
+  Add-VeeamVCServer.ps1 -vCenterServer vc1.dcloud.cisco.com -vCenterUser dcloud\demouser -vCenterPassword C1sco12345
+  ```
 
   ![Set-ExecutionPolicy](images/add-vcenter-server.png)
 
 - **Step 14** - Inventory View in Veeam. An inventory view similar to the one shown in the GUI can be achieved by using the `Get-VeeamInventory.ps1`
 
-```
-Get-VeeamInventory.ps1 -PathFilter "*HX-DC-B*"
-```
+  ```
+  Get-VeeamInventory.ps1 -PathFilter "*HX-DC-B*"
+  ```
 
   ![Get-VeeamInventory](images/get-veeam-inventory.png)
 
-#### Additional Scripts
+### Additional Scripts
 Additional Scripts have been provided to view Veeam server information and to remove the vCenter Server from Veeam. Look at the example in the code file to see an example of how the script can be run.
 
 - Get Veeam Server Information - `Get-VeeamServerInfo.ps1` will display information about the Veeam Server.
 
-```
-PS C:\Users\administrator.DCLOUD\Desktop\scenario-1> .\Get-VeeamServerInfo.ps1
+  ![Get-VeeamServerInfo](images/get-veeam-server-info.png)
 
+- Remove vCenter Server from Veeam - `Remove-VeeamVCServer.ps1` removes the vCenter server supplied on the command line. The command below will remove the vCenter server that was added in steps 6 through 13. If you try the script, be sure to re-add the vCenter server when you continue the lab.
 
-Info               : This server (Microsoft Windows Server)
-ParentId           : 00000000-0000-0000-0000-000000000000
-Id                 : 6745a759-2205-4cd2-b172-8ec8f7e60ef8
-Name               : vb2.dcloud.cisco.com
-Reference          :
-Description        : Backup server
-IsUnavailable      : False
-Type               : Local
-ApiVersion         : Unknown
-PhysHostId         : d7c4ff97-b99b-4d1f-884d-283b7b6b9ee3
-ProxyServicesCreds :
+  ```
+  Remove-VeeamVCServer.ps1 -vCenterServer vc1.dcloud.cisco.com
+  ```
 
-User   : DCLOUD\administrator
-Server : 127.0.0.1
-Port   : 9392
-```
+## Scenario 2. Add Cisco HyperFlex Storage to Veeam Backup & Replication
+The purpose of this scenario is to add the HyperFlex storage platform to Veeam Backup & Replication, which will allow the HyperFlex native snapshot integration for faster backups.
 
-- Remove vCenter Server from Veeam - `Remove-VeeamVCServer.ps1` removes the vCenter server supplied on the command line. The command below will remove the vCenter server that was added in steps 6 through 13. If you would like to test the Cmdlet, be sure to re-add the vCenter server when you continue the lab.
+These scripts are located in the directory `scenario-2`
 
-```
-Remove-VeeamVCServer.ps1 -vCenterServer vc1.dcloud.cisco.com
-```
+### Modify VMware Backup Proxy
+Backup proxies with multi-core CPUs can handle more concurrent tasks. For example, for a 4-core CPU, it is recommended to specify a maximum of 4 concurrent tasks minus two (for operating systems functions), for an 8-core CPU — 8 concurrent tasks minus two. When defining the number of concurrent tasks, keep in mind network traffic throughput in your virtual infrastructure.
+
+- **Steps 1 through 9** - Modify VMware Backup Proxy. This can be accomplished by using the `Set-VeeamVcenterBackupProxy.ps1` script.
+
+  ```
+  Set-VeeamVcenterBackupProxy.ps1 -ProxyName "VMware Backup Proxy" -TransportMode DirectStorageAccess -ConnectedDatastoreMode Manual -DatastoreName hx-b-ds1 -EnableFailoverToNBD:$false -EnableHostToProxyEncryption:$false -MaxTasks 4
+  ```
+
+  ![Set-VeeamVcenterBackupProxy](images/set-veeam-vcenter-backup-proxy.png)
+
+- An additional script, `Get-VeeamVcenterBackupProxy.ps1` is available to validate that the vCenter Backup Proxy was modified.
+
+  ![Get-VeeamVcenterBackupProxy](images/get-veeam-vcenter-backup-proxy.png)
+
+### Add a Veeam Repository
+A Veeam Repository is a location where the backup files will be stored. It can be on a Windows server (with attached storage), a Linux server running NFS, a CIFS/SMB share, or an integrated deduplication appliance.
+
+- **Steps 10 through 16** - Add a Veeam Repository. This can be accomplished by using the `Set-VeeamVcenterBackupRepository.ps1` script.
+
+- Since the Veeam Cmdlet to add the backup repository does not create and output an additional script, `Get-VeeamVcenterBackupRepository.ps1` is available to validate that the vCenter Backup Repository was added.
+
+  ![Set-VeeamVcenterBackupRepository](images/set-get-veeam-vcenter-backup-repository.png)
+
+### HyperFlex Snapshot Integration
+HyperFlex snapshot integration – unique to Veeam Backup & Replication – allows backup jobs to take advantage of native HX snapshots, providing faster backups with almost no impact on the production environment. This allows you to take backups much more frequently than conventional storage systems and dramatically improve the RPO (Recovery Point Objectives) of the application.
+
+This script requires the `VMware PowerCli PowerShell` modules to be installed and imported.
+
+  1. Install the VMware PowerCli Modules
+
+    - Run the Cmdlet `Install-Module -Name VMware.PowerCli`
+
+    - Answer "y" to **trust** the modules from **PSGallery**
+
+  2. Import the VMware PowerCli Modules
+
+    - Run the Cmdlet `Import-Module -Name VMware.PowerCli`
+
+    The VMware PowerCli modules are now installed and imported. Installtion is only required one time, however each time a PowerShell session is started the modules must be imported. This is similar to the process of adding the Veeam extension.
+
+  ![Install/Import-Module -Name VMware.PowerCli](images/install-import-module-powercli.png)
+
+### Configure NFSAccess Firewall Rules
+The IO Visor is a Cisco HyperFlex software module that runs on every ESXi host that is part of the Cisco HyperFlex cluster. It presents HyperFlex NFS datastores to the ESXi hosts and optimizes the data paths in the HyperFlex cluster. Backup over IO Visor is the preferred method as it provides the high speed of VM data reading and balances the load across the HyperFlex cluster. Access to the IO Visor from Veeam Backup & Replication requires a change in the firewall rules on each ESXi host or node on the HyperFlex cluster. This is accomplished by enabling NFSAccess.
+
+- **Steps 1 through 9** - Configure NFSAccess Firewall Rules. This can be accomplished by using the `Set-VMHostFirewall.ps1` script.
+
+  ```
+  Set-VMHostFirewall.ps1 -vCenterServer vc1.dcloud.cisco.com -vCenterUser dcloud\demouser -vCenterPassword C1sco12345 -VMhost "hx-b-*" -Rule NFSAccess -Enabled
+  ```
+
+  ![Set-VMHostFirewall](images/set-vmhost-firewall.png)
+
+### Add HX Data Platform Storage to Veeam
+As the time this collection of scripts was created Veeam did not provide a Cmdlet to add HX Data Platform Storage to Veeam.
+
+Please follow the steps in the dCloud user guide, this repository will be updated when the Veeam Cmdlet is available.
+
+## Scenario 3. Perform a Backup
+Coming Soon...
