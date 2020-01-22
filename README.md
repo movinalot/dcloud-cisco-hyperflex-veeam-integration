@@ -162,4 +162,34 @@ As the time this collection of scripts was created Veeam did not provide a Cmdle
 Please follow the steps in the dCloud user guide, this repository will be updated when the Veeam Cmdlet is available.
 
 ## Scenario 3. Perform a Backup
+In the previous scenarios PowerShell scripts were written around the Veeam PowerShell Cmdlets. For scenario 3 just the Veeam Cmdlets are utilized without and supporting PowerShell scripts.
+
+### Import Backup Jobs
+- **Steps 1 through 7** - Import Backup Jobs.
+
+```
+Get-VBRServer -type Local | Import-VBRBackup -FileName 'R:\veeam backup jobs\AD1 & SQL1 Agent backup job - ad1\AD1 & SQL1 Agent backup job - ad1.vbm'
+```
+
+```
+Get-VBRServer -type Local | Import-VBRBackup -FileName 'R:\veeam backup jobs\AD1 & SQL1 Agent backup job - sql1\AD1 & SQL1 Agent backup job - sql1.vbm'
+```
+
+### Create a Backup Job
+- **Steps 1 through 11**
+  - Select VMs to Backup - `Find-VBRViEntity`
+  - Select the Repository - `Get-VBRBackupRepository`
+  - Create the Backup Job - `Add-VBRViBackupJob`
+  - Create and Enable the Backup Schedule - `Set-VBRJobSchedule`, `Enable-VBRJobSchedule`
+  - Run the Backup Job - `Get-VBRJob`, `Start-VBRJob`
+
+```
+$vms_to_backup = Find-VBRViEntity -Name myVM-B*
+$backup_repository = Get-VBRBackupRepository -Name "Default Backup Repository"
+Add-VBRViBackupJob -Entity $vms_to_backup -BackupRepository $backup_repository
+Get-VBRJob -Name "Backup Job 1" | Set-VBRJobSchedule -Daily -At "23:00" -DailyKind Everyday | Enable-VBRJobSchedule
+Get-VBRJob -Name "Backup Job 1" | Start-VBRJob -RunAsync
+```
+
+## Scenario 4. Perform a Restore
 Coming Soon...
