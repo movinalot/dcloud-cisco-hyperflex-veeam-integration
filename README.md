@@ -192,4 +192,21 @@ Get-VBRJob -Name "Backup Job 1" | Start-VBRJob -RunAsync
 ```
 
 ## Scenario 4. Perform a Restore
-Coming Soon...
+Instant VM Recovery allows users to spin up a VM directly from a backup file, and provides the fastest RTO (Recovery Time Objective), usually within a few minutes.
+
+- **Steps 1 through 11** - Perform InstantRecovery
+  - Find the Latest Restore Point - `Get-VBRRestorePoint`
+  - Get the Restore Server - `Get-VBRServer`
+  - Start the Instant Recovery - `Start-VBRInstantRecovery`
+
+```
+$restore_point = Get-VBRBackup -Name "Backup Job 1" | Get-VBRRestorePoint -Name myVM-b1 | Sort-Object $_.creationtime -Descending | Select -First 1
+$restore_server = Get-VBRServer -Name hx-b-4.dcloud.cisco.com
+Start-VBRInstantRecovery -RestorePoint $restore_point -Server $restore_server -VMName myVM-B1_restored -Reason "For demostration purposes" -RunAsync
+```
+
+- **Step 16** - Stop Publishing
+
+```
+Get-VBRInstantRecovery | ?{$_.VMName -eq "myVM-B1_restored"} | Stop-VBRInstantRecovery -RunAsync
+```
