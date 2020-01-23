@@ -19,11 +19,15 @@ The [Cisco® HyperFlex 4.0 with Veeam Integration v1 lab](https://dcloud2-rtp.ci
 
 The Lab user guide details the each of these operations. Specifying the steps the user must take to complete each scenario.
 
-Several of the steps can be completed programmatically using the Veeam PowerShell extension. Where a step can be completed with the Veeam PowerShell extension a script has been added to this repository.
+Almost all of the steps can be completed programmatically using the Veeam PowerShell extension and VMware PowerCli. Where a step can be completed with the PowerShell a script has been added to this repository for scenarios 1 and 2.
 
 The Veem PowerShell extension is documented [here](https://helpcenter.veeam.com/docs/backup/powershell/cmdlets.html?ver=95u4). All the PowerShell scripts in the repository that interact with Veeam are using Cmdlets from the Veeam extension.
 
 This repository is separated into scenarios to match with the methodology in the dCloud lab guide. To be able to utilize the Veeam PowerShell extension it needs to be enabled in a PowerShell environment.
+
+Scripts for the scenarios have been created for scenario 1 and scenario 2 and reside in their respective directories.
+
+Scenarios 3, 4, & 5 tasks are shown in this document using the Veeam and VMware PowerCli Cmdlets directly.
 
 ## Enable the Veeam PowerShell Extension
 The Veeam PowerShell Extension is installed as part of the Veeam Availability Suite. Use the Add-PSSnapin PowerShell Cmdlet to load the Veeam PowerShell Cmdlets.
@@ -167,46 +171,119 @@ In the previous scenarios PowerShell scripts were written around the Veeam Power
 ### Import Backup Jobs
 - **Steps 1 through 7** - Import Backup Jobs.
 
-```
-Get-VBRServer -type Local | Import-VBRBackup -FileName 'R:\veeam backup jobs\AD1 & SQL1 Agent backup job - ad1\AD1 & SQL1 Agent backup job - ad1.vbm'
-```
+  ```
+  Get-VBRServer -type Local | Import-VBRBackup -FileName 'R:\veeam backup jobs\AD1 & SQL1 Agent backup job - ad1\AD1 & SQL1 Agent backup job - ad1.vbm'
+  ```
 
-```
-Get-VBRServer -type Local | Import-VBRBackup -FileName 'R:\veeam backup jobs\AD1 & SQL1 Agent backup job - sql1\AD1 & SQL1 Agent backup job - sql1.vbm'
-```
+  ```
+  Get-VBRServer -type Local | Import-VBRBackup -FileName 'R:\veeam backup jobs\AD1 & SQL1 Agent backup job - sql1\AD1 & SQL1 Agent backup job - sql1.vbm'
+  ```
 
 ### Create a Backup Job
 - **Steps 1 through 11**
   - Select VMs to Backup - `Find-VBRViEntity`
   - Select the Repository - `Get-VBRBackupRepository`
   - Create the Backup Job - `Add-VBRViBackupJob`
-  - Create and Enable the Backup Schedule - `Set-VBRJobSchedule`, `Enable-VBRJobSchedule`
-  - Run the Backup Job - `Get-VBRJob`, `Start-VBRJob`
+  - Create and Enable the Backup Schedule - `Get-VBRJob / Set-VBRJobSchedule / Enable-VBRJobSchedule`
+  - Run the Backup Job - `Get-VBRJob / Start-VBRJob`
 
-```
-$vms_to_backup = Find-VBRViEntity -Name myVM-B*
-$backup_repository = Get-VBRBackupRepository -Name "Default Backup Repository"
-Add-VBRViBackupJob -Entity $vms_to_backup -BackupRepository $backup_repository
-Get-VBRJob -Name "Backup Job 1" | Set-VBRJobSchedule -Daily -At "23:00" -DailyKind Everyday | Enable-VBRJobSchedule
-Get-VBRJob -Name "Backup Job 1" | Start-VBRJob -RunAsync
-```
+  ```
+  $vms_to_backup = Find-VBRViEntity -Name myVM-B*
+  $backup_repository = Get-VBRBackupRepository -Name "Default Backup Repository"
+  Add-VBRViBackupJob -Entity $vms_to_backup -BackupRepository $backup_repository
+  Get-VBRJob -Name "Backup Job 1" | Set-VBRJobSchedule -Daily -At "23:00" -DailyKind Everyday | Enable-VBRJobSchedule
+  Get-VBRJob -Name "Backup Job 1" | Start-VBRJob -RunAsync
+  ```
 
-## Scenario 4. Perform a Restore
+## Scenario 4. Perform a VM Restore and Delete - Perform a File Level Restore
 Instant VM Recovery allows users to spin up a VM directly from a backup file, and provides the fastest RTO (Recovery Time Objective), usually within a few minutes.
 
+### Perform InstantRecovery
 - **Steps 1 through 11** - Perform InstantRecovery
-  - Find the Latest Restore Point - `Get-VBRRestorePoint`
+  - Find the Latest Restore Point - `Get-VBRBackup / Get-VBRRestorePoint`
   - Get the Restore Server - `Get-VBRServer`
   - Start the Instant Recovery - `Start-VBRInstantRecovery`
 
-```
-$restore_point = Get-VBRBackup -Name "Backup Job 1" | Get-VBRRestorePoint -Name myVM-b1 | Sort-Object $_.creationtime -Descending | Select -First 1
-$restore_server = Get-VBRServer -Name hx-b-4.dcloud.cisco.com
-Start-VBRInstantRecovery -RestorePoint $restore_point -Server $restore_server -VMName myVM-B1_restored -Reason "For demostration purposes" -RunAsync
-```
+  ```
+  $restore_point = Get-VBRBackup -Name "Backup Job 1" | Get-VBRRestorePoint -Name myVM-b1 | Sort-Object $_.creationtime -Desc ending | Select -First 1
+  $restore_server = Get-VBRServer -Name hx-b-4.dcloud.cisco.com
+  Start-VBRInstantRecovery -RestorePoint $restore_point -Server $restore_server -VMName myVM-B1_restored -Reason "For demonstration purposes" -RunAsync
+  ```
 
+### View VM in vCenter
+- **Step 13** - View VM in vCenter
+  ```
+  Import-Module -Name VMware.PowerCli
+  Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false
+  Connect-VIServer -Server vc1.dcloud.cisco.com -User dcloud\demouser -Password C1sco12345
+  Get-VM -Name myVM-B1_restored
+   ```
+
+  The results should be similar to this
+  ```
+  PS C:\Users\administrator.DCLOUD\Desktop\scenario-1> Get-VM -Name myVM-B1_restored
+
+  Name                 PowerState Num CPUs MemoryGB
+  ----                 ---------- -------- --------
+  myVM-B1_restored     PoweredOff 1        0.500
+  ```
+
+### Stop Publishing
 - **Step 16** - Stop Publishing
 
-```
-Get-VBRInstantRecovery | ?{$_.VMName -eq "myVM-B1_restored"} | Stop-VBRInstantRecovery -RunAsync
-```
+  ```
+  Get-VBRInstantRecovery | ?{$_.VMName -eq "myVM-B1_restored"} | Stop-VBRInstantRecovery -RunAsync
+  ```
+
+  If you were to view the VM again in vCenter an error message would be returned.
+  ```
+  PS C:\Users\administrator.DCLOUD\Desktop\scenario-1> Get-VM -Name myVM-B1_restored
+  Get-VM : 1/22/2020 9:14:05 AM   Get-VM          VM with name 'myVM-B1_restored' was not found using the specified filter(s).
+  At line:1 char:1
+  + Get-VM -Name myVM-B1_restored
+  + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      + CategoryInfo          : ObjectNotFound: (:) [Get-VM], VimException
+      + FullyQualifiedErrorId : Core_OutputHelper_WriteNotFoundError,VMware.VimAutomation.ViCore.Cmdlets.Commands.GetVM
+  ```
+
+### File Level Recovery
+Veeam Backup & Replication also provides granular recovery of a file or group of files from a backed up VM.
+
+- **Steps 1 through 7** - File Level Recovery
+  - Find the Latest Restore Point - `Get-VBRBackup / Get-VBRRestorePoint`
+  - Start the Windows File Restore - `Start-VBRWindowsFileRestore`
+  - Get the Guest OS Credentials - `Get-VBRCredentials`
+  - Get the Restore Session - `Get-VBRRestoreSession`
+  - Start the Windows Guest OS File Restore - `Start-VBRWindowsGuestItemRestore`
+  - Stop the Restore Session - `Stop-VBRWindowsFileRestore`
+
+  ```
+  $restore_point = Get-VBRBackup | Get-VBRRestorePoint -Name sql1 | Sort-Object $_.creationtime -Descending | Select -First 1
+  $restore_start = Start-VBRWindowsFileRestore -RestorePoint $restore_point -Reason "For demonstration purposes"
+  $restore_credentials = Get-VBRCredentials -Name "dcloud\demouser"
+  $restore_session = Get-VBRRestoreSession | ?{$_.state -eq "Working" -and  $Id -eq $restore_start.MountSession.RestoreSessionInfo.Uid}
+  Start-VBRWindowsGuestItemRestore -Path "C:\Software\" -Session $restore_session -RestorePolicy Overwrite -GuestCredentials $restore_credentials
+  Stop-VBRWindowsFileRestore $restore_start
+  ```
+
+## Scenario 5. VM Replication
+The purpose of this scenario is to create a replication job, replicate important VMs to a recovery site, create a failover plan, and test out the failover process. This scenario replicates VMs from one HyperFlex cluster (hx-cluster-b) to the second HyperFlex cluster (hx-cluster-a), simulating a local replication scenario.
+
+### Create a Replication Job
+
+- **Steps 1 through 17** - Create a Replication Job
+  - Find the Destination Cluster/Server - `Find-VBRViEntity`
+  - Find Source VM - `Find-VBRViEntity`
+  - Get Backup Proxy - `Get-VBRViProxy`
+  - Add Replication Job - `Add-VBRViReplicaJob`
+  - Set Replication Job Schedule - `Get-VBRJob / Set-VBRJobSchedule / Enable-VBRJobSchedule`
+  - Run the Replication Job - `Get-VBRJob / Start-VBRJob`
+
+  ```
+  $replica_dest_cluster = Find-VBRViEntity -Name hx-cluster-a
+  $replica_source_vm = Find-VBRViEntity -Name myVM-B2
+  $backup_proxy = Get-VBRViProxy -Name "VMware Backup Proxy"
+  Add-VBRViReplicaJob -Name "Replication Job 1" -Server $replica_dest_cluster -Entity $replica_source_vm -Suffix "_replicated" -SourceProxy $backup_proxy -TargetProxy $backup_proxy
+  Get-VBRJob -Name "Replication Job 1" | Set-VBRJobSchedule -Daily -At "22:00" -DailyKind Everyday | Enable-VBRJobSchedule
+  Get-VBRJob -Name "Replication Job 1" | Start-VBRJob -RunAsync
+  ```
