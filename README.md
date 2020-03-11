@@ -266,7 +266,7 @@ Instant VM Recovery allows users to spin up a VM directly from a backup file, an
 ### File Level Recovery
 Veeam Backup & Replication also provides granular recovery of a file or group of files from a backed up VM.
 
-- **Steps 1 through 7** - File Level Recovery
+- **Steps 1 through 17** - File Level Recovery
   - Find the Latest Restore Point - `Get-VBRBackup / Get-VBRRestorePoint`
   - Start the Windows File Restore - `Start-VBRWindowsFileRestore`
   - Get the Guest OS Credentials - `Get-VBRCredentials`
@@ -277,9 +277,9 @@ Veeam Backup & Replication also provides granular recovery of a file or group of
   ```
   $restore_point = Get-VBRBackup | Get-VBRRestorePoint -Name sql1 | Sort-Object $_.creationtime -Descending | Select -First 1
   $restore_start = Start-VBRWindowsFileRestore -RestorePoint $restore_point -Reason "For demonstration purposes"
-  $restore_credentials = Get-VBRCredentials -Name "dcloud\demouser"
+  $restore_credentials = @(Get-VBRCredentials -Name "dcloud\demouser")
   $restore_session = Get-VBRRestoreSession | ?{$_.state -eq "Working" -and  $Id -eq $restore_start.MountSession.RestoreSessionInfo.Uid}
-  Start-VBRWindowsGuestItemRestore -Path "C:\Software\" -Session $restore_session -RestorePolicy Overwrite -GuestCredentials $restore_credentials
+  Start-VBRWindowsGuestItemRestore -Path "C:\Software\" -Session $restore_session -RestorePolicy Overwrite -GuestCredentials $restore_credentials[0]
   Stop-VBRWindowsFileRestore $restore_start
   ```
 
