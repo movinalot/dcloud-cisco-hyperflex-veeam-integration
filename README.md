@@ -1,4 +1,4 @@
-# PowerShell Scripts for dCloud Cisco® HyperFlex 4.0 with Veeam Integration v1 Lab
+# PowerShell Scripts for dCloud Cisco® HyperFlex 4.0 with Veeam Availability Suite Lab v1
 
 ## Cisco HyperFlex™
 Cisco HyperFlex™ is part of a complete data center strategy that uses hyperconvergence architecture models to solve basic business challenges of data optimization, operational efficiency, and adaptability. Because it is built on the Cisco UCS® platform, it allows unified network management using skillsets that are already present in the organization. It is scalable, adaptable, and completely hyperconverged – providing the three layers of Network, Compute & Storage intelligently integrated into a single solution for faster application deployment.
@@ -9,7 +9,7 @@ Veeam Backup & Replication can be deployed and configured with backup server, pr
 Veeam software can be downloaded for free from https://www.veeam.com/downloads.html. For this lab, Veeam Availability Suite, which includes Veeam Backup & Replication and Veeam ONE, has been downloaded
 
 ## Lab Scenarios with Veeam PowerShell Extension
-The [Cisco® HyperFlex 4.0 with Veeam Integration v1 lab](https://dcloud2-rtp.cisco.com/content/demo/630524?returnPathTitleKey=content-view) is designed to take the lab user through the following scenarios
+The **Cisco HyperFlex 4.0 with Veeam Availability Suite Lab v1** is designed to take the lab user through the following scenarios
 
 - Scenario 1. Install Veeam Backup & Replication
 - Scenario 2. Add Cisco HyperFlex Storage to Veeam Backup & Replication
@@ -17,9 +17,15 @@ The [Cisco® HyperFlex 4.0 with Veeam Integration v1 lab](https://dcloud2-rtp.ci
 - Scenario 4. Perform a Restore
 - Scenario 5. VM Replication
 
+The Lab is available at these dCloud locations
+- [RTP](https://dcloud2-rtp.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view)
+- [SJC](https://dcloud2-sjc.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view)
+- [SNG](https://dcloud2-sng.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view)
+- [LON](https://dcloud2-lon.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view)
+
 The Lab user guide details the each of these operations. Specifying the steps the user must take to complete each scenario.
 
-Almost all of the steps can be completed programmatically using the Veeam PowerShell extension and VMware PowerCli. Where a step can be completed with the PowerShell a script has been added to this repository for scenarios 1 and 2.
+***Almost*** all of the steps can be completed programmatically using the Veeam PowerShell extension and VMware PowerCli. Where a step can be completed with the PowerShell a script has been added to this repository for scenarios 1 and 2.
 
 The Veem PowerShell extension is documented [here](https://helpcenter.veeam.com/docs/backup/powershell/cmdlets.html?ver=95u4). All the PowerShell scripts in the repository that interact with Veeam are using Cmdlets from the Veeam extension.
 
