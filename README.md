@@ -222,7 +222,7 @@ Instant VM Recovery allows users to spin up a VM directly from a backup file, an
   - Start the Instant Recovery - `Start-VBRInstantRecovery`
 
   ```
-  $restore_point = Get-VBRBackup -Name "Backup Job 1" | Get-VBRRestorePoint -Name myVM-b1 | Sort-Object $_.creationtime -Desc ending | Select -First 1
+  $restore_point = Get-VBRBackup -Name "Backup Job 1" | Get-VBRRestorePoint -Name myVM-b1 | Sort-Object $_.creationtime -Descending | Select -First 1
   $restore_server = Get-VBRServer -Name hx-b-4.dcloud.cisco.com
   Start-VBRInstantRecovery -RestorePoint $restore_point -Server $restore_server -VMName myVM-B1_restored -Reason "For demonstration purposes" -RunAsync
   ```
