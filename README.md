@@ -80,7 +80,7 @@ Downloaded scripts will typically throw an error when running them, set the scri
 The purpose of this scenario is to allow Veeam Backup & Replication gain visibility into the virtual infrastructure.
 
 ### Add Managed Servers
-- **Steps 6 through 13** - Add a vCenter server to Veeam. This can be accomplished by using the `Add-VeeamVCServer.ps1` script.
+- **Steps 1 through 10** - Add a vCenter server to Veeam. This can be accomplished by using the `Add-VeeamVCServer.ps1` script.
 
   ```
   Add-VeeamVCServer.ps1 -vCenterServer vc1.dcloud.cisco.com -vCenterUser dcloud\demouser -vCenterPassword C1sco12345
@@ -88,7 +88,7 @@ The purpose of this scenario is to allow Veeam Backup & Replication gain visibil
 
   ![Set-ExecutionPolicy](images/add-vcenter-server.png)
 
-- **Step 14** - Inventory View in Veeam. An inventory view similar to the one shown in the GUI can be achieved by using the `Get-VeeamInventory.ps1`
+- **Step 11** - Inventory View in Veeam. An inventory view similar to the one shown in the GUI can be achieved by using the `Get-VeeamInventory.ps1`
 
   ```
   Get-VeeamInventory.ps1 -PathFilter "*HX-DC-B*"
