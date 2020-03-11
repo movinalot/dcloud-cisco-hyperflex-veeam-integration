@@ -79,6 +79,9 @@ Downloaded scripts will typically throw an error when running them, set the scri
 ## Scenario 1. Install Veeam Backup & Replication
 The purpose of this scenario is to allow Veeam Backup & Replication gain visibility into the virtual infrastructure.
 
+### Install Veeam Backup & Replication
+- This is not a scripted section - Does not mean it can't be...
+
 ### Add Managed Servers
 - **Steps 1 through 10** - Add a vCenter server to Veeam. This can be accomplished by using the `Add-VeeamVCServer.ps1` script.
 
@@ -171,6 +174,8 @@ The IO Visor is a Cisco HyperFlex software module that runs on every ESXi host t
   ![Set-VMHostFirewall](images/set-vmhost-firewall.png)
 
 ### Add HX Data Platform Storage to Veeam
+- This is not a scripted step
+
 As the time this collection of scripts was created Veeam did not provide a Cmdlet to add HX Data Platform Storage to Veeam.
 
 Please follow the steps in the dCloud user guide, this repository will be updated when the Veeam Cmdlet is available.
@@ -215,7 +220,7 @@ In the previous scenarios PowerShell scripts were written around the Veeam Power
 ## Scenario 4. Perform a VM Restore and Delete - Perform a File Level Restore
 Instant VM Recovery allows users to spin up a VM directly from a backup file, and provides the fastest RTO (Recovery Time Objective), usually within a few minutes.
 
-### Perform InstantRecovery
+### Instant VM Recovery
 - **Steps 1 through 11** - Perform InstantRecovery
   - Find the Latest Restore Point - `Get-VBRBackup / Get-VBRRestorePoint`
   - Get the Restore Server - `Get-VBRServer`
@@ -283,6 +288,12 @@ Veeam Backup & Replication also provides granular recovery of a file or group of
   Stop-VBRWindowsFileRestore $restore_start
   ```
 
+### Application Item Recovery for SQL Server
+- This is not a scripted section - Does not mean it can't be... I have not gotten to it yet.
+
+### Application Item Restore for Active Directory
+- This is not a scripted section - Does not mean it can't be... I have not gotten to it yet.
+
 ## Scenario 5. VM Replication
 The purpose of this scenario is to create a replication job, replicate important VMs to a recovery site, create a failover plan, and test out the failover process. This scenario replicates VMs from one HyperFlex cluster (hx-cluster-b) to the second HyperFlex cluster (hx-cluster-a), simulating a local replication scenario.
 
@@ -304,3 +315,6 @@ The purpose of this scenario is to create a replication job, replicate important
   Get-VBRJob -Name "Replication Job 1" | Set-VBRJobSchedule -Daily -At "22:00" -DailyKind Everyday | Enable-VBRJobSchedule
   Get-VBRJob -Name "Replication Job 1" | Start-VBRJob -RunAsync
   ```
+
+### Create a Failover Plan
+- This is not a scripted section - Does not mean it can't be... I have not gotten to it yet.
