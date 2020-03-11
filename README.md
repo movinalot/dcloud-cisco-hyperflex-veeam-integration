@@ -181,6 +181,13 @@ In the previous scenarios PowerShell scripts were written around the Veeam Power
 ### Import Backup Jobs
 - **Steps 1 through 7** - Import Backup Jobs.
 
+**Important:** Because the scripts in Scenarios 1 and 2 interact with the Veeam server the have statements for adding and removing the VeeamPSSnapin. For the this scenario and the remaining scenarios you will need to Add the VeeamPSSnapin and Connect to the Veeam Server.
+
+  ```
+  Add-PSSnapin VeeamPSSnapin
+  Connect-VBRServer
+  ```
+  
   ```
   Get-VBRServer -type Local | Import-VBRBackup -FileName 'R:\veeam backup jobs\AD1 & SQL1 Agent backup job - ad1\AD1 & SQL1 Agent backup job - ad1.vbm'
   ```
