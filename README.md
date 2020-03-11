@@ -143,15 +143,17 @@ HyperFlex snapshot integration – unique to Veeam Backup & Replication – allo
 
 This script requires the `VMware PowerCli PowerShell` modules to be installed and imported.
 
-  1. Install the VMware PowerCli Modules
+1. Install the VMware PowerCli Modules
 
-    - Run the Cmdlet Install-Module -Name VMware.PowerCli
-    - Answer "y" to "Do you want PowerShellGet to install and import the NuGet provider now?"
-    - Answer "y" to "Are you sure you want to install the modules from 'PSGallery'?"
+  - Run the Cmdlet `Install-Module -Name VMware.PowerCli`
 
-  2. Import the VMware PowerCli Modules
+  - Answer "y" to "Do you want PowerShellGet to install and import the NuGet provider now?"
 
-    - Run the Cmdlet `Import-Module -Name VMware.PowerCli`
+  - Answer "y" to "Are you sure you want to install the modules from 'PSGallery'?"
+
+2. Import the VMware PowerCli Modules
+
+  - Run the Cmdlet `Import-Module -Name VMware.PowerCli`
 
     The VMware PowerCli modules are now installed and imported. Installtion is only required one time, however each time a PowerShell session is started the modules must be imported. This is similar to the process of adding the Veeam extension.
 
