@@ -35,10 +35,12 @@ Scripts for the scenarios have been created for scenario 1 and scenario 2 and re
 
 Scenarios 3, 4, & 5 tasks are shown in this document using the Veeam and VMware PowerCli Cmdlets directly.
 
+**Note:** The code and actions in this repository pick up after the Veeam installation steps at the sections titled **Add Managed Servers**
+
 ## Enable the Veeam PowerShell Extension
 The Veeam PowerShell Extension is installed as part of the Veeam Availability Suite. Use the Add-PSSnapin PowerShell Cmdlet to load the Veeam PowerShell Cmdlets.
 
-1. Launch a PowerShell window as an administrator on the `vb2`desktop
+1. Launch a PowerShell window as an administrator on the `vb2` desktop
 
   - ***Right-Click*** on `Windows PowerShell`
 
