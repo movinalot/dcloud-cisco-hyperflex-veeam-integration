@@ -18,10 +18,10 @@ The **Cisco HyperFlex 4.0 with Veeam Availability Suite Lab v1** is designed to 
 - Scenario 5. VM Replication
 
 The Lab is available at these dCloud locations
-- [RTP](https://dcloud2-rtp.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view)
-- [SJC](https://dcloud2-sjc.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view)
-- [SNG](https://dcloud2-sng.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view)
-- [LON](https://dcloud2-lon.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view)
+- [LON](https://dcloud2-lon.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view) - London, England UK
+- [RTP](https://dcloud2-rtp.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view) - Raleigh, North Carolina US
+- [SJC](https://dcloud2-sjc.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view) - San Jose, California US
+- [SNG](https://dcloud2-sng.cisco.com/content/catalogue?search=Cisco%20HyperFlex%204.0%20with%20Veeam%20Availability%20Suite%20Lab%20v1&screenCommand=openSearchScreen&returnPathTitleKey=content-view) - Singapore
 
 The Lab user guide details the each of these operations. Specifying the steps the user must take to complete each scenario.
 
