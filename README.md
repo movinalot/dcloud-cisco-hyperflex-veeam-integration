@@ -145,9 +145,9 @@ This script requires the `VMware PowerCli PowerShell` modules to be installed an
 
   1. Install the VMware PowerCli Modules
 
-    - Run the Cmdlet `Install-Module -Name VMware.PowerCli`
-
-    - Answer "y" to **trust** the modules from **PSGallery**
+    - Run the Cmdlet Install-Module -Name VMware.PowerCli
+    - Answer "y" to "Do you want PowerShellGet to install and import the NuGet provider now?"
+    - Answer "y" to "Are you sure you want to install the modules from 'PSGallery'?"
 
   2. Import the VMware PowerCli Modules
 
