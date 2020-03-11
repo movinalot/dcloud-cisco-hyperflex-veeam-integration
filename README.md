@@ -117,7 +117,7 @@ These scripts are located in the directory `scenario-2`
 ### Modify VMware Backup Proxy
 Backup proxies with multi-core CPUs can handle more concurrent tasks. For example, for a 4-core CPU, it is recommended to specify a maximum of 4 concurrent tasks minus two (for operating systems functions), for an 8-core CPU — 8 concurrent tasks minus two. When defining the number of concurrent tasks, keep in mind network traffic throughput in your virtual infrastructure.
 
-- **Steps 1 through 9** - Modify VMware Backup Proxy. This can be accomplished by using the `Set-VeeamVcenterBackupProxy.ps1` script.
+- **Steps 1 through 10** - Modify VMware Backup Proxy. This can be accomplished by using the `Set-VeeamVcenterBackupProxy.ps1` script.
 
   ```
   Set-VeeamVcenterBackupProxy.ps1 -ProxyName "VMware Backup Proxy" -TransportMode DirectStorageAccess -ConnectedDatastoreMode Manual -DatastoreName hx-b-ds1 -EnableFailoverToNBD:$false -EnableHostToProxyEncryption:$false -MaxTasks 4
@@ -132,7 +132,7 @@ Backup proxies with multi-core CPUs can handle more concurrent tasks. For exampl
 ### Add a Veeam Repository
 A Veeam Repository is a location where the backup files will be stored. It can be on a Windows server (with attached storage), a Linux server running NFS, a CIFS/SMB share, or an integrated deduplication appliance.
 
-- **Steps 10 through 16** - Add a Veeam Repository. This can be accomplished by using the `Set-VeeamVcenterBackupRepository.ps1` script.
+- **Steps 11 through 17** - Add a Veeam Repository. This can be accomplished by using the `Set-VeeamVcenterBackupRepository.ps1` script.
 
 - Since the Veeam Cmdlet to add the backup repository does not create and output an additional script, `Get-VeeamVcenterBackupRepository.ps1` is available to validate that the vCenter Backup Repository was added.
 
